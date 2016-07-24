@@ -1,3 +1,8 @@
+# Builds
+|Master   |  Development |
+|:------:|:------:|:-------:|:-------:|
+[![Build status](https://ci.appveyor.com/api/projects/status/h03858kuyk31rwn7/branch/master?svg=true)](https://ci.appveyor.com/project/theonlyway/xdscdomainjoin/branch/master)|[![Build status](https://ci.appveyor.com/api/projects/status/h03858kuyk31rwn7?svg=true)](https://ci.appveyor.com/project/theonlyway/xdscdomainjoin)
+
 # xDSCDomainjoin #
 
 ## Overview ##
