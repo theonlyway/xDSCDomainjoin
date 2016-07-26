@@ -1,8 +1,6 @@
 ﻿Import-Module -Name .\DSCResources\xDSCDomainjoin\xDSCDomainjoin.psm1
 
 InModuleScope -ModuleName xDSCDomainjoin -ScriptBlock {
-  $EnsurePresent = 'Present'
-  $EnsureAbsent = 'Absent'
   $username = 'USER'
   $password = 'PASSWORD'
   $secureString = $password | ConvertTo-SecureString -AsPlainText -Force
