@@ -1,47 +1,58 @@
-﻿Import-Module .\DSCResources\xDSCDomainjoin\xDSCDomainjoin.psm1
+﻿Import-Module -Name .\DSCResources\xDSCDomainjoin\xDSCDomainjoin.psm1
 
-InModuleScope xDSCDomainjoin {
-  $EnsurePresent = "Present"
-  $EnsureAbsent = "Absent"
-  $username = "USER"
-  $password = "PASSWORD"
+InModuleScope -ModuleName xDSCDomainjoin -ScriptBlock {
+  $EnsurePresent = 'Present'
+  $EnsureAbsent = 'Absent'
+  $username = 'USER'
+  $password = 'PASSWORD'
   $secureString = $password | ConvertTo-SecureString -AsPlainText -Force
-  $credential = New-Object System.Management.Automation.PSCredential $username, $secureString  
-  $Domain = "test.local"
-  $JoinOU = "ou=test,dc=test,dc=com"
+  $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $username, $secureString  
+  $Domain = 'test.local'
+  $JoinOU = 'ou=test,dc=test,dc=com'
 
 
-    Describe "Testing if functions return correct objects" {
-
-    It "Get-TargetResource returns a hashtable" {
+  Describe -Name 'Testing if functions return correct objects' -Fixture {
+    It -name 'Get-TargetResource returns a hashtable' -test {
       Get-TargetResource -Domain $Domain -Credential $credential -JoinOU $JoinOU | Should Be 'System.Collections.Hashtable'
     }
 
-    It "Test-TargetResource returns true or false" {
+    It -name 'Test-TargetResource returns true or false' -test {
       (Test-TargetResource -Domain $Domain -Credential $credential -JoinOU $JoinOU).GetType() -as [string] | Should Be 'bool'
     }
   }
 
-    Describe "Testing if Get-TargetResource returns correct values" {
-    Mock Get-WMIObject {[PSCustomObject]@{Domain = $Domain}}
-    It "Get-TargetResource returns domain $domain" {
+  Describe -Name 'Testing if Get-TargetResource returns correct values' -Fixture {
+    Mock -CommandName Get-WMIObject -MockWith {
+      [PSCustomObject]@{
+        Domain = $Domain
+      }
+    }
+    It -name "Get-TargetResource returns domain $Domain" -test {
       (Get-TargetResource -Domain $Domain -Credential $credential -JoinOU $JoinOU).Domain | Should Be $Domain
     }
-    It "Get-TargetResource returns credentials" {
+    It -name 'Get-TargetResource returns credentials' -test {
       (Get-TargetResource -Domain $Domain -Credential $credential -JoinOU $JoinOU).Credential | Should Be 'MSFT_Credential'
     }
-    It "Get-TargetResource returns OU $joinOU" {
-      (Get-TargetResource -Domain $Domain -Credential $credential -JoinOU $JoinOU).joinOU | Should Be $joinOU
+    It -name "Get-TargetResource returns OU $JoinOU" -test {
+      (Get-TargetResource -Domain $Domain -Credential $credential -JoinOU $JoinOU).joinOU | Should Be $JoinOU
     }
   }
 
-    Describe "Testing Test-TargetResource" {
-    Mock Get-WMIObject {[PSCustomObject]@{Domain = $Domain}}
-    It "Test-TargetResource should return true as it matches $domain" {
+  Describe -Name 'Testing Test-TargetResource' -Fixture {
+    Mock -CommandName Get-WMIObject -MockWith {
+      [PSCustomObject]@{
+        Domain = $Domain
+      }
+    }
+    It -name "Test-TargetResource should return true as it matches $Domain" -test {
       Test-TargetResource -Domain $Domain -Credential $credential -JoinOU $JoinOU | Should Be $true
     }
-    Mock Get-WMIObject {[PSCustomObject]@{Domain = "Testing fail"}}
-    It "Test-TargetResource should return false as it shouldn't match $domain" {
+    Mock -CommandName Get-WMIObject -MockWith {
+      [PSCustomObject]@{
+        Domain = 'Testing fail'
+      }
+    }
+    It -name "Test-TargetResource should return false as it shouldn't match $Domain" -test {
       Test-TargetResource -Domain $Domain -Credential $credential -JoinOU $JoinOU | Should Be $false
     }
   }
