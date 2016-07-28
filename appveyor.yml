@@ -9,7 +9,7 @@ skip_commits:
 #---------------------------------#
 #      environment configuration  #
 #---------------------------------#
-version: '1.6.{build}'
+version: '1.0.{build}'
 os: WMF 5
 environment:
  my_secvariable:
