@@ -16,3 +16,4 @@
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
 *.psm1  diff=astextplain
+*.psd1  diff=astextplain
